@@ -1,3 +1,1 @@
-# Python
-
-Everything Python and only Python.
+This repository contains most of my work in python.
