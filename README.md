@@ -1,1 +1,1 @@
-This repository contains most of my work in python.
+This repository contains some of my work in python.
