@@ -1,0 +1,40 @@
+import os
+import hashlib
+import virustotal
+
+# create a VirusTotal API client
+api_key = "<your-api-key>"
+vt = virustotal.Client(api_key)
+
+# specify directory to scan
+scan_dir = "/path/to/directory"
+
+# compute hash of a file
+def compute_file_hash(file_path):
+    # open file in binary mode
+    with open(file_path, "rb") as f:
+        # read file content
+        data = f.read()
+        
+        # compute hash of file content
+        file_hash = hashlib.md5(data).hexdigest()
+        
+        return file_hash
+
+# scan all files in specified directory
+for root, dirs, files in os.walk(scan_dir):
+    for file in files:
+        # compute file path
+        file_path = os.path.join(root, file)
+        
+        # compute file hash
+        file_hash = compute_file_hash(file_path)
+        
+        # check if file hash is known
+        file_report = vt.file_report(file_hash)
+        if file_report["response_code"] == 1:
+            # get malware name from report
+            malware_name = file_report["results"]["name"]
+            
+            # raise alarm
+            print(f"ALERT: Known malware detected at {file_path} with hash {file_hash} ({malware_name})")
