@@ -1,0 +1,32 @@
+import hashlib
+
+def encrypt(message, key):
+    # Generate a random salt
+    salt = os.urandom(16)
+
+    # Use PBKDF2 to derive a key from the password and salt
+    key = hashlib.pbkdf2_hmac('sha256', key, salt, 100000)
+
+    # Use AES-256 in CTR mode to encrypt the message
+    iv = os.urandom(16)
+    cipher = AES.new(key, AES.MODE_CTR, iv)
+    ciphertext = cipher.encrypt(message)
+
+    # Return the salt, IV, and ciphertext as a single byte array
+    return salt + iv + ciphertext
+
+def decrypt(ciphertext, key):
+    # Split the salt, IV, and ciphertext from the input
+    salt = ciphertext[:16]
+    iv = ciphertext[16:32]
+    ciphertext = ciphertext[32:]
+
+    # Use PBKDF2 to derive a key from the password and salt
+    key = hashlib.pbkdf2_hmac('sha256', key, salt, 100000)
+
+    # Use AES-256 in CTR mode to decrypt the ciphertext
+    cipher = AES.new(key, AES.MODE_CTR, iv)
+    message = cipher.decrypt(ciphertext)
+
+    # Return the decrypted message
+    return message
